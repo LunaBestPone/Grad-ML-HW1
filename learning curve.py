@@ -89,8 +89,8 @@ def main():
                 acc += 1
         acc = float(acc)/float(test_set_label_matrix.shape[0])
         print(str(cur_length) +","+str(acc))
-        a.append[cur_length]
-        b.append[acc]
+        a.append(cur_length)
+        b.append(acc)
 
     print(a)
     print(b)
