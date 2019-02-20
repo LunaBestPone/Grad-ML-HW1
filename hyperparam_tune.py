@@ -6,9 +6,11 @@ from operator import itemgetter
 def main():
     if len(sys.argv) != 5:
         print("Usage :   ./hyperparam_tune <max k> <TRAIN SET> <VAL. SET> <TEST SET>")
+        sys.exit(0)
 
     if not sys.argv[1].isdigit():
         print("max k must be an INT")
+        sys.exit(0)
 
     max_k = int(sys.argv[1])
 
@@ -94,7 +96,13 @@ def main():
     best_k = np.argsort((-k_acc_matrix),axis=0,kind="stable")[0][0] + 1
     best_k_acc = 0
 
-    normed_training_set_num_feature_matrix = np.vstack((normed_training_set_num_feature_matrix,normed_val_set_num_feature_matrix))
+    if training_set_num_feature_matrix.size != 0 :
+        training_set_num_feature_matrix = np.vstack((training_set_num_feature_matrix,val_set_num_feature_matrix))
+        mean = np.mean(training_set_num_feature_matrix,0)
+        std = np.std(training_set_num_feature_matrix,0)
+        std[std==0] = 1
+        normed_training_set_num_feature_matrix = (training_set_num_feature_matrix.astype(float) - mean)/std.astype(float)
+        normed_test_set_num_feature_matrix = (test_set_num_feature_matrix.astype(float) - mean)/std.astype(float)
     training_set_vote_feature_matrix = np.vstack((training_set_vote_feature_matrix,val_set_vote_feature_matrix))
     training_set_label_matrix = np.vstack((training_set_label_matrix,val_set_label_matrix))
 
