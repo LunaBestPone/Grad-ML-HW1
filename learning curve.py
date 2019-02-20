@@ -55,8 +55,6 @@ def main():
 
 
     full_length = training_set_label_matrix.shape[0]
-    a = []
-    b = []
     for f in range(1,11):
         cur_length = int(full_length*(f/10))
         cur_training_set_num_feature_matrix = np.delete(training_set_num_feature_matrix,range(cur_length,full_length-1),0)
@@ -89,11 +87,6 @@ def main():
                 acc += 1
         acc = float(acc)/float(test_set_label_matrix.shape[0])
         print(str(cur_length) +","+str(acc))
-        a.append(cur_length)
-        b.append(acc)
-
-    print(a)
-    print(b)
 
 if __name__ ==  "__main__":
     main()
