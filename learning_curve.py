@@ -33,10 +33,12 @@ def main():
             vote_feature_index_list.append(idx)
 
     training_set_num_feature_matrix = np.delete(np.array(training_set["data"]), vote_feature_index_list, 1)[:,:-1]
+    training_set_num_feature_matrix = training_set_num_feature_matrix.astype(np.float)
     training_set_vote_feature_matrix = np.delete(np.array(training_set["data"]), num_feature_index_list, 1)[:,:-1]
     training_set_label_matrix = np.array(training_set["data"])[:,-1:]
 
     test_set_num_feature_matrix = np.delete(np.array(test_set["data"]), vote_feature_index_list, 1)[:,:-1]
+    test_set_num_feature_matrix = test_set_num_feature_matrix.astype(np.float)
     test_set_vote_feature_matrix = np.delete(np.array(test_set["data"]), num_feature_index_list, 1)[:,:-1]
     test_set_label_matrix = np.array(test_set["data"])[:,-1:]
 
@@ -57,15 +59,17 @@ def main():
     full_length = training_set_label_matrix.shape[0]
     for f in range(1,11):
         cur_length = int(full_length*(f/10))
-        cur_training_set_num_feature_matrix = np.delete(training_set_num_feature_matrix,range(cur_length,full_length-1),0)
+        if cur_length < 1:
+            cur_length = 1
+        cur_training_set_num_feature_matrix = training_set_num_feature_matrix[:cur_length]
         if feature_status[0] == 1:
             mean = np.mean(cur_training_set_num_feature_matrix,0)
             std = np.std(cur_training_set_num_feature_matrix,0)
             std[std==0] = 1
-            normed_training_set_num_feature_matrix = (cur_training_set_num_feature_matrix.astype(float) - mean)/std.astype(float)
-            normed_test_set_num_feature_matrix = (test_set_num_feature_matrix.astype(float) - mean)/std.astype(float)
-        cur_training_set_vote_feature_matrix = np.delete(training_set_vote_feature_matrix,range(cur_length,full_length-1),0)
-        cur_training_set_label_matrix = np.delete(training_set_label_matrix,range(cur_length,full_length-1),0)
+            normed_training_set_num_feature_matrix = (cur_training_set_num_feature_matrix - mean)/std
+            normed_test_set_num_feature_matrix = (test_set_num_feature_matrix - mean)/std
+        cur_training_set_vote_feature_matrix = np.delete(training_set_vote_feature_matrix,range(cur_length,full_length),0)
+        cur_training_set_label_matrix = np.delete(training_set_label_matrix,range(cur_length,full_length),0)
         acc = 0
         for i in range(test_set_label_matrix.shape[0]):
             dict_count = OrderedDict()
@@ -82,10 +86,10 @@ def main():
             knn_label_list = cur_training_set_label_matrix[knn_index_list]
             for label in knn_label_list:
                 dict_count[label[0]] += 1
-            max_count_label = sorted(dict_count.items(),key=itemgetter(1),reverse=True)[0][0]
+            max_count_label = max(dict_count,key=dict_count.get)
             if(max_count_label == test_set_label_matrix[i][0]):
                 acc += 1
-        acc = float(acc)/float(test_set_label_matrix.shape[0])
+        acc = acc/float(test_set_label_matrix.shape[0])
         print(str(cur_length) +","+str(acc))
 
 if __name__ ==  "__main__":

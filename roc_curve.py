@@ -33,10 +33,12 @@ def main():
             vote_feature_index_list.append(idx)
 
     training_set_num_feature_matrix = np.delete(np.array(training_set["data"]), vote_feature_index_list, 1)[:,:-1]
+    training_set_num_feature_matrix = training_set_num_feature_matrix.astype(np.float)
     training_set_vote_feature_matrix = np.delete(np.array(training_set["data"]), num_feature_index_list, 1)[:,:-1]
     training_set_label_matrix = np.array(training_set["data"])[:,-1:]
 
     test_set_num_feature_matrix = np.delete(np.array(test_set["data"]), vote_feature_index_list, 1)[:,:-1]
+    test_set_num_feature_matrix = test_set_num_feature_matrix.astype(np.float)
     test_set_vote_feature_matrix = np.delete(np.array(test_set["data"]), num_feature_index_list, 1)[:,:-1]
     test_set_label_matrix = np.array(test_set["data"])[:,-1:]
 
