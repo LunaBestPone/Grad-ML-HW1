@@ -1,0 +1,3 @@
+#!/bin/bash
+exec python hyperparam_tune.py "$@"
+
