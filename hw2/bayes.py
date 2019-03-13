@@ -1,8 +1,6 @@
 import sys, json
 import numpy as np
 import math
-from collections import OrderedDict
-from operator import itemgetter
 
 def main():
     np.set_printoptions(precision=12)
